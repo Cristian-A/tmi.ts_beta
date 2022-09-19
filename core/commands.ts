@@ -95,9 +95,6 @@ export class TwitchCommands {
 		return this.ws.send(`PRIVMSG ${this.channel} :/unraid`);
 	}
 	announce(msg: string) {
-		return this.ws.send(`PRIVMSG ${this.channel} :/announce ${msg}`);
-	}
-	announce_orange(msg: string) {
 		return this.ws.send(`PRIVMSG ${this.channel} :/announceorange ${msg}`);
 	}
 
