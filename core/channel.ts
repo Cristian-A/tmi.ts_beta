@@ -40,14 +40,12 @@ export class Channel {
 		roomstate: null,
 	};
 
-	constructor(public key: string, private tc: TwitchChat) {
-		//@ts-ignore
-		this.commands = new TwitchCommands(key, tc.ws);
+	constructor(public broadcaster: string, public id: string,
+		public key: string, private tc: TwitchChat) {
+		this.commands = new TwitchCommands(this.broadcaster, this.id, this.key);
 	}
-	/**
-	 *
-	 * Send a message to the channel
-	 */
+
+	/** send a message to the channel */
 	send(msg: string) {
 		const { ws } = this.tc;
 		if (!ws || !this.isConnected) {
@@ -57,9 +55,7 @@ export class Channel {
 		ws.send(query);
 	}
 
-	/**
-	 * Leave the channel
-	 */
+	/** leave the channel */
 	part() {
 		const { ws } = this.tc;
 		if (!ws) throw 'Websocket not available';

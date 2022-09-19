@@ -30,7 +30,8 @@ export class TwitchChat {
 		notice: null,
 	};
 
-	constructor(private oauth: string, username: string) {
+	constructor(public oauth: string, public id: string,
+		public broadcaster: string, username: string) {
 		this.username = username.toLowerCase();
 	}
 
@@ -46,7 +47,6 @@ export class TwitchChat {
 				return;
 			}
 			const ws = new WebSocket(SecureIRCURL);
-
 			ws.onopen = () => {
 				ws.send(`PASS oauth:${this.oauth}`);
 				ws.send(`NICK ${this.username}`);
@@ -69,9 +69,7 @@ export class TwitchChat {
 								break;
 							case 'notice':
 								if (tmsg.raw.includes('failed')) {
-									if (this.ws) {
-										this.ws = null;
-									}
+									this.ws = null;
 									ws.close();
 									rej(new Error(tmsg.raw));
 								}
@@ -94,16 +92,16 @@ export class TwitchChat {
 			};
 		});
 	}
-	joinChannel(chan: string): Channel {
+
+	join(chan: string): Channel {
 		chan = getChannelName(chan);
-		if (!this.ws) {
-			throw new Error('Connect before joining');
-		}
-		const c = new Channel(chan, this);
+		if (!this.ws) throw new Error('Connect before joining');
+		const c = new Channel(this.broadcaster, this.id, this.oauth, this);
 		this.channels.set(chan, c);
 		this.ws.send(`JOIN ${chan}`);
 		return c;
 	}
+
 	/** Parts all of connected channels disconnects from Twitch's Chat */
 	disconnect(): string | void {
 		if (!this.ws)

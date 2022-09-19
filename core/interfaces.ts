@@ -69,6 +69,7 @@ interface BoxOrLogo {
 	template: string;
 }
 
+
 export interface V5StreamsConfig {
 	[key: string]: any;
 	channel?: string;
