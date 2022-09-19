@@ -30,7 +30,7 @@ export class TwitchChat {
 		notice: null,
 	};
 
-	constructor(public oauth: string, public id: string,
+	constructor(public id: string, public oauth: string,
 		public broadcaster: string, username: string) {
 		this.username = username.toLowerCase();
 	}
