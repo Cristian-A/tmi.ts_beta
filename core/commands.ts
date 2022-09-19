@@ -95,7 +95,18 @@ export class TwitchCommands {
 		return this.ws.send(`PRIVMSG ${this.channel} :/unraid`);
 	}
 	announce(msg: string) {
+		return this.ws.send(`PRIVMSG ${this.channel} :/announce ${msg}`);
+	}
+	announceOrange(msg: string) {
 		return this.ws.send(`PRIVMSG ${this.channel} :/announceorange ${msg}`);
 	}
-
+	announceGreen(msg: string) {
+		return this.ws.send(`PRIVMSG ${this.channel} :/announcegreen ${msg}`);
+	}
+	announceBlue(msg: string) {
+		return this.ws.send(`PRIVMSG ${this.channel} :/announceblue ${msg}`);
+	}
+	announcePurple(msg: string) {
+		return this.ws.send(`PRIVMSG ${this.channel} :/announcepurple ${msg}`);
+	}
 }
