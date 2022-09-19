@@ -102,7 +102,7 @@ export function parser(data: string, username: string) {
 
 	// If there's no more whitespace left, extract everything from the
 	// current position to the end of the string as the command..
-	if (nextspace === -1) {
+	if (nextspace === - 1) {
 		if (data.length > position) {
 			message.command = data.slice(position) as KeyOfCommands;
 			return message;

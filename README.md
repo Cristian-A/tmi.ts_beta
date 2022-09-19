@@ -26,57 +26,19 @@ redirect url matches the websites redirect url
 import { TwitchChat, Channel } from "https://deno.land/x/tmi/mod.ts";
 import { delay } from "https://deno.land/std@0.64.0/async/delay.ts";
 
-const tc = new TwitchChat(oauth, username);
+const tc = new TwitchChat(oauth);
 
 try {
 	await tc.connect();
-	tc.listener("whisper", (whisper) => {
+	tc.listener("whisper", whisper => {
 		// Do something with whisper here
 	});
-	const channel = tc.joinChannel("xqcow");
-	channel.listener("privmsg", (ircMsg) => {
-		if (ircMsg.message.contains("badword")) {
-			channel.commands.ban(ircMsg.username)
-		} else if (ircMsg.directMsg) {
-			console.log(`You have been messaged by ${ircMsg.username}`)
-		}
-	);
+	const channel = tc.join("xqcow", "9119090");
+	channel.listener("privmsg", ircMsg => {
+		// Do something with ircMsg here
+	});
 	await delay(60000);
 	tc.disconnect();
-} catch (e) { console.error(e); }
-```
-
-### Method Two (Async Iterators)
-
-``` javascript
-import { TwitchChat, Channel } from "https://deno.land/x/tmi/mod.ts";
-import { delay } from "https://deno.land/std@0.64.0/async/delay.ts";
-
-const tc = new TwitchChat(oauth, username);
-
-async function listenWhispers(tc: TwitchChat) {
-	for await (const ircmsg of tc) {
-		switch (ircmsg.command) {
-			case "whisper":
-			// Do something with ircmsg here
-		}
-	}
-}
-
-async function listenChannel(c: Channel) {
-	for await (const ircmsg of c) {
-		switch (ircmsg.command) {
-			case "PRIVMSG":
-			// Do something with ircmsg here
-		}
-	}
-}
-
-try {
-	await tc.connect();
-	listenWhispers(tc);
-	const channel = tc.joinChannel("hasanabi");
-	listenChannel(channel);
 } catch (e) { console.error(e); }
 ```
 
@@ -89,7 +51,7 @@ Allows you to connect to Twitch's chat, listen to private whispers and more
 	Connects to Twitch's secure WebSocket endpoint `wss://irc-ws.chat.twitch.tv:443`.
 	Returns a promise that resolves when the user has correctly authenticated else it rejects.
 
-- `.joinChannel(channel: string)`
+- `.join(channel: string, broadcaster: string)`
 
 	Joins the channel that it's given as a parameter.
 	Returns a promise.

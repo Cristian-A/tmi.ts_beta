@@ -1,16 +1,20 @@
 
-import { Deferred, deferred }
-	from 'https://deno.land/std@0.79.0/async/deferred.ts';
 import { Badges } from './data.ts';
-
-interface MySignal<T> {
-	signal: Deferred<T>;
-}
 
 export function getChannelName(channel: string) {
 	channel = channel.toLowerCase();
 	if (channel[0] !== '#') channel = '#' + channel;
 	return channel;
+}
+
+export async function getOAUTHInfo(oauth: string) {
+	const data = await fetch('https://id.twitch.tv/oauth2/validate', {
+		method: 'GET',
+		headers: { 'Authorization': `OAuth ${oauth}` }
+	});
+	if (data.status !== 200) throw new Error('Invalid OAUTH token!');
+	const json = await data.json();
+	return { id: json.client_id, username: json.login };
 }
 
 export function removeBreaks(s: string) {
@@ -24,16 +28,6 @@ export function findChannelName(str: string) {
 		chan += char;
 	}
 	return chan;
-}
-
-export async function * getAsyncIter<T>(o: MySignal<T>) {
-	while (true) {
-		try {
-			const data = await o.signal;
-			yield data;
-			o.signal = deferred();
-		} catch { break; }
-	}
 }
 
 export const createBadges = (): Badges => ({
