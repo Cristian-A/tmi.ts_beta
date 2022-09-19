@@ -71,6 +71,7 @@ export class TwitchChat {
 				return;
 			}
 		};
+		while (ws.readyState !== WebSocket.OPEN) { /**/ }
 		this.ws = ws;
 	}
 
