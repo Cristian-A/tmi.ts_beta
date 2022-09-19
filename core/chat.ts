@@ -25,55 +25,55 @@ export class TwitchChat {
 
 	constructor (private oauth: string) { }
 
-	async connect() {
-		const { id, username } = await getOAUTHInfo(this.oauth);
-		this.username = username.toLowerCase();
-		this.oauthid = id;
-		if (this.ws && this.ws.readyState !== this.ws.CLOSED)
-			throw new Error('Websocket connection already established!');
-		const ws = new WebSocket(SecureIRCURL);
-		ws.onopen = () => {
-			ws.send(`PASS oauth:${this.oauth}`);
-			ws.send(`NICK ${this.username}`);
-		};
-		ws.onmessage = message => {
-			const tmsg = parser(message.data, this.username);
-			if (!tmsg) return;
-			const lCmd = tmsg.command.toLowerCase();
-			if (lCmd in this.cbs) {
-				switch (lCmd) {
-					case '001':
-						ws.send(CAP);
-						this.ws = ws;
-					return message.data;
-					case 'ping':
-						ws.send('PONG :tmi.twitch.tv');
-					break;
-					case 'notice':
-						if (tmsg.raw.includes('failed')) {
-							this.ws = null;
-							ws.close();
-							throw new Error(tmsg.raw);
-						}
-					break;
+	connect() { return new Promise<string>((respond, reject) => {
+		getOAUTHInfo(this.oauth).then(({ id, username }) => {
+			this.username = username.toLowerCase();
+			this.oauthid = id;
+			if (this.ws && this.ws.readyState !== this.ws.CLOSED)
+				reject(new Error('Websocket connection already established!'));
+			const ws = new WebSocket(SecureIRCURL);
+			ws.onopen = () => {
+				ws.send(`PASS oauth:${this.oauth}`);
+				ws.send(`NICK ${this.username}`);
+			};
+			ws.onmessage = message => {
+				const tmsg = parser(message.data, this.username);
+				if (!tmsg) return;
+				const lCmd = tmsg.command.toLowerCase();
+				if (lCmd in this.cbs) {
+					switch (lCmd) {
+						case '001':
+							ws.send(CAP);
+							this.ws = ws;
+							respond(message.data);
+						break;
+						case 'ping':
+							ws.send('PONG :tmi.twitch.tv');
+						break;
+						case 'notice':
+							if (tmsg.raw.includes('failed')) {
+								this.ws = null;
+								ws.close();
+								reject(new Error(tmsg.raw));
+							}
+						break;
+					}
+					if (this.signal) this.signal.resolve(tmsg);
+					const isGlobalCmd = this.cbs[lCmd as TwitchChatEvents];
+					if (isGlobalCmd) isGlobalCmd(tmsg);
+					return;
 				}
-				if (this.signal) this.signal.resolve(tmsg);
-				const isGlobalCmd = this.cbs[lCmd as TwitchChatEvents];
-				if (isGlobalCmd) isGlobalCmd(tmsg);
-				return;
-			}
-			const channel = this.channels.get(tmsg.channel);
-			if (channel) {
-				if (channel.signal) channel.signal.resolve(tmsg);
-				channel.trigger(
-					tmsg.command.toLowerCase() as ChannelEvents, tmsg
-				);
-				return;
-			}
-		};
-		while (ws.readyState !== WebSocket.OPEN) { /**/ }
-		this.ws = ws;
-	}
+				const channel = this.channels.get(tmsg.channel);
+				if (channel) {
+					if (channel.signal) channel.signal.resolve(tmsg);
+					channel.trigger(
+						tmsg.command.toLowerCase() as ChannelEvents, tmsg
+					);
+				}
+			};
+			this.ws = ws;
+		});
+	}); }
 
 	/** @param broadcaster the broadcaster id */
 	join(channel: string, broadcaster: string): Channel {
