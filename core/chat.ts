@@ -26,12 +26,12 @@ export class TwitchChat {
 	constructor (private oauth: string) { }
 
 	async connect() {
-		if (this.ws && this.ws.readyState !== this.ws.CLOSED)
-			throw new Error('Websocket connection already established!');
-		const ws = new WebSocket(SecureIRCURL);
 		const { id, username } = await getOAUTHInfo(this.oauth);
 		this.username = username.toLowerCase();
 		this.oauthid = id;
+		if (this.ws && this.ws.readyState !== this.ws.CLOSED)
+			throw new Error('Websocket connection already established!');
+		const ws = new WebSocket(SecureIRCURL);
 		ws.onopen = () => {
 			ws.send(`PASS oauth:${this.oauth}`);
 			ws.send(`NICK ${this.username}`);
@@ -71,6 +71,7 @@ export class TwitchChat {
 				return;
 			}
 		};
+		this.ws = ws;
 	}
 
 	/** @param broadcaster the broadcaster id */
