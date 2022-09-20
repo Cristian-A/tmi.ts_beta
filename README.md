@@ -3,7 +3,9 @@
 
 This repo is a fork of https://github.com/MarcDwyer/tmi.ts since he did not
 add me as a collaborator, he's probably not going to update / maintain it
-(and I needed fast changes to the api).
+(and I needed fast changes to the api). Also his version is going to break
+after Feb 2023, cause of the breaking changes in the twitch api itself.
+I revrote everything to be typesafe and compatible with the new api.
 This package is very similar to [tmi.js](https://github.com/tmijs/tmi.js)
 but for Deno. This package is still very early in development.
 
