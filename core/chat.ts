@@ -6,7 +6,7 @@ import { getChannelName, getOAUTHInfo } from './utilities.ts';
 import { parser } from './parser.ts';
 
 type TwitchChatEvents = '001' | 'whisper' | 'ping' | 'notice';
-type TwitchChatCallback = (msg: IRCMessage) => void;
+type TwitchChatCallback = (message: IRCMessage) => void;
 
 const CAP = 'CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership';
 

@@ -37,7 +37,7 @@ export function parser(data: string, username: string) {
 		command: Commands.NONE,
 		params: [],
 		channel: '',
-		directMsg: false,
+		direct: false,
 		message: '',
 		username: '',
 	};
@@ -149,6 +149,6 @@ export function parser(data: string, username: string) {
 	}
 	const lowerMsg = message.message.toLowerCase();
 	const hasName = lowerMsg.includes(username);
-	if (hasName) message.directMsg = true;
+	if (hasName) message.direct = true;
 	return message;
 }

@@ -56,7 +56,7 @@ export type Badges = {
 
 export interface IRCMessage {
 	tags: Tags;
-	directMsg: boolean;
+	direct: boolean;
 	raw: string;
 	badges: Badges;
 	prefix: string;
@@ -79,7 +79,7 @@ export type PrivateMessage = {
 	username: string;
 	channel: string;
 	message: string;
-	directMsg: boolean;
+	direct: boolean;
 	command: string;
 	tags: Tags;
 };
