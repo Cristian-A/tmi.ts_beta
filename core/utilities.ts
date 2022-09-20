@@ -44,10 +44,7 @@ export function setBadges(badges: string, badgeRec: Badges) {
 		const test = reg.test(char);
 		if (test) badge += char;
 		else {
-			if (badge.length) {
-				//@ts-ignore
-				badgeRec[badge] = true;
-			}
+			if (badge.length) badgeRec[badge as keyof Badges] = true;
 			badge = '';
 		}
 	}
