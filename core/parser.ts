@@ -1,6 +1,7 @@
 
-import { IRCMessage, Commands, KeyOfCommands, Tags } from './data.ts';
-import { createBadges, setBadges, removeBreaks } from './utilities.ts';
+import { IRCMessage, Commands, KeyOfCommands } from './data.ts';
+import { createBadges, createTags, setBadges, removeBreaks }
+	from './utilities.ts';
 
 /*
 	Copyright (c) 2013-2015, Fionn Kelleher All rights reserved.
@@ -32,7 +33,7 @@ export function parser(data: string, username: string) {
 	const message: IRCMessage = {
 		raw: data,
 		badges: createBadges(),
-		tags: { } as Tags,
+		tags: createTags(),
 		prefix: '',
 		command: Commands.NONE,
 		params: [],

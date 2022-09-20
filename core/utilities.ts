@@ -1,5 +1,5 @@
 
-import { Badges } from './data.ts';
+import { Badges, Tags } from './data.ts';
 
 export function getChannelName(channel: string) {
 	channel = channel.toLowerCase();
@@ -35,6 +35,23 @@ export const createBadges = (): Badges => ({
 	glitchcon: false,
 	turbo: false,
 	moderator: false,
+});
+
+export const createTags = (): Tags => ({
+	'display-name': '',
+	'room-id': '',
+	'id': '',
+	'color': '',
+	'emotes': '',
+	'mod': false,
+	'vip': false,
+	'art': false,
+	'turbo': false,
+	'subscriber': false,
+	'flags': '',
+	'tmi-sent-ts': '',
+	'user-id': '',
+	'user-type': '',
 });
 
 export function setBadges(badges: string, badgeRec: Badges) {
