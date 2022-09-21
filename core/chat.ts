@@ -17,7 +17,8 @@ export class TwitchChat {
 	channels = new Map<string, Channel>();
 	signal: null | Deferred<IRCMessage> = null;
 
-	private username = ''; private oauthid = ''; private broadcaster = '';
+	private username = ''; private userid = '';
+	private oauthid = ''; private broadcaster = '';
 
 	private cbs: Record<TwitchChatEvents, TwitchChatCallback | null> = {
 		'001': null, 'whisper': null, 'ping': null, 'notice': null,
@@ -26,9 +27,9 @@ export class TwitchChat {
 	constructor (private oauth: string) { }
 
 	connect() { return new Promise<string>((respond, reject) => {
-		getOAUTHInfo(this.oauth).then(({ id, username }) => {
+		getOAUTHInfo(this.oauth).then(({ id, username, userid }) => {
 			this.username = username.toLowerCase();
-			this.oauthid = id;
+			this.oauthid = id; this.userid = userid;
 			if (this.ws && this.ws.readyState !== this.ws.CLOSED)
 				reject(new Error('Websocket connection already established!'));
 			const ws = new WebSocket(SecureIRCURL);
@@ -80,7 +81,7 @@ export class TwitchChat {
 		channel = getChannelName(channel);
 		if (!this.ws) throw new Error('Connect before joining');
 		const c = new Channel(
-			channel, broadcaster, this.oauthid, this.oauth, this
+			channel, broadcaster, this.userid, this.oauthid, this.oauth, this
 		);
 		this.channels.set(channel, c);
 		this.ws.send(`JOIN ${channel}`);

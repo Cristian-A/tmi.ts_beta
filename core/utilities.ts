@@ -14,7 +14,7 @@ export async function getOAUTHInfo(oauth: string) {
 	});
 	if (data.status !== 200) throw new Error('Invalid OAUTH token!');
 	const json = await data.json();
-	return { id: json.client_id, username: json.login };
+	return { id: json.client_id, username: json.login, userid: json.user_id };
 }
 
 export function removeBreaks(s: string) {

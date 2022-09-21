@@ -28,10 +28,10 @@ export class Channel {
 
 	/** @param broadcaster the broadcaster id */
 	constructor (private channel: string, private broadcaster: string,
-				 private oauthid: string, private oauth: string,
-				 private tc: TwitchChat) {
+				 private userid: string, private oauthid: string,
+				 private oauth: string, private tc: TwitchChat) {
 		this.commands = new TwitchCommands(
-			this.broadcaster, this.oauthid, this.oauth
+			this.broadcaster, this.userid, this.oauthid, this.oauth
 		);
 	}
 

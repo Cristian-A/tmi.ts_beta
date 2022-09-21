@@ -10,17 +10,20 @@ export type ChatType = "emote" | "follower" | "subscriber" |
 
 export class TwitchCommands {
 
+	private astr: string;
 	private headers = {
 		'Content-Type': 'application/json',
-		'Authorization': `Bearer `,
+		'Authorization': 'Bearer ',
 		'Client-Id': '',
 	};
 
 	/** @param broadcaster the broadcaster id */
-	constructor (private broadcaster: string,
+	constructor (private broadcaster: string, private userid: string,
 		private oauthid: string, private oauth: string) {
-		this.headers['Authorization'] += this.oauth;
-		this.headers['Client-Id'] = this.oauthid;
+		this.headers['Authorization'] += oauth;
+		this.headers['Client-Id'] = oauthid;
+		this.astr =
+			`?broadcaster_id=${this.broadcaster}&moderator_id=${this.userid}`;
 	}
 
 	/**  send an announcement to the channel
@@ -30,9 +33,7 @@ export class TwitchCommands {
 	 *                `"primary"`, `"blue"`, `"purple"`, `"green"`, `"orange"`
 	 */
 	async announce(message: string, color: Announcement = "primary") {
-		const query = await fetch(CHAT_ENDPOINT + 'announcements' +
-			`?broadcaster_id=${this.broadcaster}&moderator_id=${this.oauthid}`,
-		{
+		const query = await fetch(CHAT_ENDPOINT + 'announcements' + this.astr, {
 			method: 'POST', headers: this.headers,
 			body: JSON.stringify({ message, color })
 		});
@@ -50,8 +51,7 @@ export class TwitchCommands {
 	 *             to delete all messages in the channel
 	 */
 	async delete(id = "") {
-		const query = await fetch(MOD_ENDPOINT +
-			`?broadcaster_id=${this.broadcaster}&moderator_id=${this.oauthid}` +
+		const query = await fetch(MOD_ENDPOINT + this.astr +
 			(id.length > 0 ? `&message_id=${id}` : ''), {
 			method: 'DELETE', headers: this.headers
 		});
@@ -63,10 +63,10 @@ export class TwitchCommands {
 		throw new Error('endpoint connection failed on `announce`!');
 	}
 
-	// moderator:manage:chat_settings
+	/* moderator:manage:chat_settings
 	async chat(type: ChatType, data: boolean | string) {
 		
-	}
+	}*/
 
 	// sendwisper user:manage:whispers
 	// color user:manage:chat_color
