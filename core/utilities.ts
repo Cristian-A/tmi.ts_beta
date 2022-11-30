@@ -38,16 +38,17 @@ export const createBadges = (): Badges => ({
 });
 
 export const createTags = (): Tags => ({
+	'broadcaster': false,
 	'display-name': '',
 	'room-id': '',
 	'id': '',
 	'color': '',
 	'emotes': '',
+	'sub': false,
 	'mod': false,
 	'vip': false,
 	'art': false,
 	'turbo': false,
-	'subscriber': false,
 	'flags': '',
 	'tmi-sent-ts': '',
 	'user-id': '',

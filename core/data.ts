@@ -31,16 +31,17 @@ export enum Commands {
 export type KeyOfCommands = keyof typeof Commands;
 
 export type Tags = {
+	'broadcaster': boolean;
 	'display-name': string;
 	'room-id': string;
 	'id': string;
 	'color': string;
 	'emotes': string;
+	'sub': boolean;
 	'mod': boolean;
 	'vip': boolean;
 	'art': boolean;
 	'turbo': boolean;
-	'subscriber': boolean;
 	'flags': string;
 	'tmi-sent-ts': string;
 	'user-id': string;

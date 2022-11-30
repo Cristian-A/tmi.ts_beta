@@ -60,16 +60,17 @@ export function parser(data: string, username: string) {
 			const [k, v] = tag.split('=');
 			if (k === 'badges') setBadges(v, message.badges);
 			switch (k) {
+				case 'broadcaster': message.tags['broadcaster'] = true; break;
 				case 'display-name': message.tags['display-name'] = v; break;
 				case 'room-id': message.tags['room-id'] = v; break;
 				case 'id': message.tags['id'] = v; break;
 				case 'color': message.tags['color'] = v; break;
 				case 'emotes': message.tags['emotes'] = v; break;
+				case 'subscriber': message.tags['sub'] = v == '1'; break;
 				case 'mod': message.tags['mod'] = v == '1'; break;
 				case 'vip': message.tags['vip'] = v == '1'; break;
 				case 'art': message.tags['art'] = v == '1'; break;
 				case 'turbo': message.tags['turbo'] = v == '1'; break;
-				case 'subscriber': message.tags['subscriber'] = v == '1'; break;
 				case 'flags': message.tags['flags'] = v; break;
 				case 'tmi-sent-ts': message.tags['tmi-sent-ts'] = v; break;
 				case 'user-id': message.tags['user-id'] = v; break;
