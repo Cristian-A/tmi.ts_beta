@@ -77,6 +77,7 @@ export function parser(data: string, username: string) {
 				case 'user-type': message.tags['user-type'] = v; break;
 			}
 		}
+		if ('broadcaster' in message.badges) message.tags['broadcaster'] = true;
 		position = nextspace + 1;
 	}
 	// skip any trailing whitespace..
